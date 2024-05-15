@@ -29,13 +29,13 @@
         <div class="music-list">
             <div class="music-list-header d-flex justify-content-between">
                 <h5>Favorite Music</h5>
-                <i class="material-icons">close</i>
+                <i class="material-icons close">close</i>
             </div>
 
             <ul class="m-0 p-0">
                 <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
+                    <div class="list-song-details">
+                        <span class="list-song-name">Harley Bird - Home || </span>
                         <span class="artist">Jordan</span>
                     </div>
 
@@ -43,59 +43,7 @@
                         heart_minus
                         </span>
                 </li>
-                
-                <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
-                        <span class="artist">Jordan</span>
-                    </div>
-
-                    <span class="material-symbols-outlined">
-                        heart_plus
-                        </span>
-                </li>
-
-
-                <!-- <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
-                        <span class="artist">Jordan</span>
-                    </div>
-
-                    <i class="material-icons">remove</i>
-                </li>
-                <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
-                        <span class="artist">Jordan</span>
-                    </div>
-
-                    <i class="material-icons">remove</i>
-                </li>
-                <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
-                        <span class="artist">Jordan</span>
-                    </div>
-
-                    <i class="material-icons">remove</i>
-                </li>
-                <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
-                        <span class="artist">Jordan</span>
-                    </div>
-
-                    <i class="material-icons">remove</i>
-                </li>
-                <li>
-                    <div class="song-details">
-                        <span class="song-name">Harley Bird - Home || </span>
-                        <span class="artist">Jordan</span>
-                    </div>
-
-                    <i class="material-icons">remove</i>
-                </li> -->
+  
                 
             </ul>
         </div>
@@ -104,9 +52,9 @@
             
             <i class="material-icons fav-music-btn">favorite_border</i>
            
-            <button type="button" class="btn">
-                <i class="material-icons">queue_music</i>
-            </button>
+            
+            <i class="material-icons">queue_music</i>
+            
            
         </div>
 
@@ -115,14 +63,18 @@
         <div class="img-area d-flex justify-content-center">
             <img src="./images/music-1.jpg" alt="" class="object-fit-cover img-responsive mt-3 rounded-circle">
         </div>
-        <div class="song-details text-center my-4">
-            <p class="song-name">Harley Bird - Home <span>|| </span><span class="artist">Jordan Scho</span></p>
+        <div class="song-details text-center my-4 d-flex justify-content-between ">
+            <p class="song-name">Harley Bird - Home||Jordan Scho</p>
+
+            <span class="material-symbols-outlined add-to-favorite">
+                heart_plus
+                </span>
         </div>
 
         <div class="progress-area my-3">
 
             <div class="progress-baar">
-                <audio  id="main-audio" src=""></audio>
+                <audio  id="main-audio" src="./songs/music-1.mp3"></audio>
             </div>    
 
             <div class="song-timer d-flex justify-content-between my-1">
