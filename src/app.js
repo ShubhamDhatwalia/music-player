@@ -16,6 +16,7 @@ removebtn.addEventListener("click", () => {
 
 let musicImage = document.querySelector(".img-area img");
 let musicName = document.querySelector(".song-details .song-name");
+let musicArtist = document.querySelector(".song-details .artist");
 let playPauseBtn = document.querySelector(".play-pause");
 let mainAudio = document.querySelector("#main-audio");
 let container = document.querySelector(".container");
@@ -28,8 +29,13 @@ let currentTime = document.querySelector(".curr-time");
 let duration = document.querySelector(".max-time");
 let progressArea = document.querySelector(".progress-area");
 let volumeSlider = document.querySelector(".volume-bar");
+const volumeIcon = document.querySelector(".volume-up");
+const volumeBar = document.querySelector(".volume-bar");
+let favMusicList = document.querySelector(".music-list ul");
+let addFavorite = document.querySelector(".add-to-favorite");
+let currentSong;
 
-
+console.log(musicName.innerText);
 
 //   ------------ Music Index ----------------------------
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
@@ -39,13 +45,45 @@ window.addEventListener("load", () => {
 });
 
 
-//    -------------------------- load music function ------------
-function loadMusic(indexNumber) {
+//  ----------------------- Add to favorite list --------------------------
+addFavorite.addEventListener("click", () => {
 
-    musicImage.src = `./images/${allMusic[indexNumber - 1].img}.jpg`;
-    mainAudio.src = `./songs/${allMusic[indexNumber - 1].src}.mp3`;
-    musicName.innerText = `${allMusic[indexNumber - 1].name}||${allMusic[indexNumber - 1].artist}`;
+    console.log("btn clicked");
+
+    const isSongInFavorites = Array.from(favMusicList.children).some(listItem => {
+        const songDetails = listItem.querySelector('.list-song-details');
+        const songName = songDetails.querySelector('.list-song-name').innerText.trim();
+        const songArtist = songDetails.querySelector('.artist').innerText.trim();
+        return songName === musicName.innerText && songArtist === currentSong.artist;
+    });
+
+    if (!isSongInFavorites) {
+        let listItem = document.createElement("li");
+        
+        listItem.innerHTML =
+            `<div class="list-song-details">
+                <span class="list-song-name">${musicName.innerText}</span>
+                <span class="artist">${currentSong.artist}</span>
+            </div>
+            <span class="material-symbols-outlined">heart_minus</span>`;
+
+        favMusicList.appendChild(listItem);
+    } else {
+        console.log("Song is already in the favorites.");
+    }
+});
+
+//  ----------------------- Load Music ------------------------------
+function loadMusic(indexNumber) {
+    currentSong = allMusic[indexNumber - 1];
+
+    musicImage.src = `./images/${currentSong.img}.jpg`;
+    mainAudio.src = `./songs/${currentSong.src}.mp3`;
+    musicName.innerText = `${currentSong.name}||`;
+    musicArtist.innerText = `${currentSong.artist}`;
 }
+
+
 
 
 
@@ -71,13 +109,28 @@ playPauseBtn.addEventListener("click", () => {
 
 
 //  ------------------ Next Music ----------------------
-
 function nextMusic() {
-    musicIndex++;
-    musicIndex > allMusic.length ? musicIndex = 1 : musicIndex = musicIndex;
+    let isRepeatOne = repeatbtn.innerText === "repeat_one";
+    let isShuffle = repeatbtn.innerText === "shuffle";
+
+    if (!isRepeatOne && !isShuffle) {
+        // If neither repeat_one nor shuffle mode is active, move to the next song
+        musicIndex++;
+        musicIndex > allMusic.length ? musicIndex = 1 : musicIndex = musicIndex;
+    } else if (isShuffle) {
+        // If shuffle mode is active, generate a random index until it's different from the current index
+        let randIndx = musicIndex;
+        do {
+            randIndx = Math.floor((Math.random() * allMusic.length) + 1);
+        } while (musicIndex === randIndx);
+
+        musicIndex = randIndx;
+    }
+
     loadMusic(musicIndex);
     playMusic();
 }
+
 
 
 
@@ -108,7 +161,7 @@ prevBtn.addEventListener("click", () => {
 
 repeatbtn.addEventListener("click", () => {
     let getText = repeatbtn.innerText;
-   
+
 
     switch (getText) {
         case "repeat":
@@ -152,12 +205,12 @@ mainAudio.addEventListener("ended", () => {
             do {
                 randIndx = Math.floor((Math.random() * allMusic.length) + 1);
             }
-            while (musicIndex == randIndx) 
-               
+            while (musicIndex == randIndx)
+
             musicIndex = randIndx;
             loadMusic(musicIndex);
             playMusic();
-            break; 
+            break;
     }
 });
 
@@ -171,59 +224,60 @@ mainAudio.addEventListener("timeupdate", (e) => {
     const currTime = e.target.currentTime;
     const duration = e.target.duration;
 
-    let progressWidth = (currTime/duration)*100;
+    let progressWidth = (currTime / duration) * 100;
 
     progressBar.style.width = `${progressWidth}%`;
 
 
 
 
-    let currMin = Math.floor(currTime/60);
-    let currSec = Math.floor(currTime%60);
-    if(currSec <10){
+    let currMin = Math.floor(currTime / 60);
+    let currSec = Math.floor(currTime % 60);
+    if (currSec < 10) {
         currSec = `0${currSec}`;
     }
 
     currentTime.innerText = `${currMin}:${currSec}`;
-   
+
 
 });
 
 //  ----------------- updating current time and duration according to song ------------
 
-mainAudio.addEventListener("loadeddata", ()=>{
+mainAudio.addEventListener("loadeddata", () => {
 
 
     let mainAudioDuration = mainAudio.duration;
-    let totalMin = Math.floor(mainAudioDuration/60);
-    let totalSec = Math.floor(mainAudioDuration%60);
+    let totalMin = Math.floor(mainAudioDuration / 60);
+    let totalSec = Math.floor(mainAudioDuration % 60);
 
-    if(totalSec < 10){
+    if (totalSec < 10) {
         totalSec = `0${totalSec}`;
     }
     duration.innerText = `${totalMin}:${totalSec}`;
-    
-} );
+
+});
 
 
 
 // ------------------- update current time and progres bar width --------------
 
-progressArea.addEventListener("click", (e)=>{
+progressArea.addEventListener("click", (e) => {
 
     let progressWidth = progressArea.clientWidth;
     let clickedOffsetX = e.offsetX;
     let songDuration = mainAudio.duration;
 
-    mainAudio.currentTime = (clickedOffsetX/progressWidth)*songDuration;
+    mainAudio.currentTime = (clickedOffsetX / progressWidth) * songDuration;
     playMusic();
 });
 
 
+//  ------------------    volume slider -----------------------------------
 
-volumeSlider.addEventListener("input", ()=>{
-    
-    let volumeValue = parseFloat(this.value); 
+volumeSlider.addEventListener("input", () => {
+
+    let volumeValue = parseFloat(volumeSlider.value);
     if (!isNaN(volumeValue) && volumeValue >= 0 && volumeValue <= 100) {
         mainAudio.volume = volumeValue / 100;
     }
@@ -231,9 +285,21 @@ volumeSlider.addEventListener("input", ()=>{
 });
 
 
-//   ----------------------  Add to favorite list  --------------------
-let addFavorite = document.querySelector(".add-to-favorite");
 
-addFavorite.addEventListener("click", () => {
-    console.log("btn clicked");
+//    ------------ volume slider on clicking of volume up btn ----------------------
+
+
+volumeIcon.addEventListener("click", () => {
+    // Toggle the visibility of the volume bar
+    if (volumeBar.style.display === "block") {
+        volumeBar.style.display = "none";
+    } else {
+        volumeBar.style.display = "block";
+    }
 });
+
+
+
+//   ----------------------  Add to favorite list  --------------------
+
+
