@@ -35,7 +35,7 @@ let favMusicList = document.querySelector(".music-list ul");
 let addFavorite = document.querySelector(".add-to-favorite");
 let currentSong;
 
-console.log(musicName.innerText);
+
 
 //   ------------ Music Index ----------------------------
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
@@ -43,6 +43,9 @@ let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 window.addEventListener("load", () => {
     loadMusic(musicIndex);
 });
+
+
+
 
 
 //  ----------------------- Add to favorite list --------------------------
@@ -73,6 +76,18 @@ addFavorite.addEventListener("click", () => {
     }
 });
 
+
+// Add event listener to each "heart_minus" icon
+favMusicList.addEventListener("click", (event) => {
+    if (event.target.classList.contains("material-symbols-outlined") && event.target.innerText === "heart_minus") {
+        // Remove the parent li element containing the song details
+        event.target.parentElement.remove();
+    }
+});
+
+
+
+
 //  ----------------------- Load Music ------------------------------
 function loadMusic(indexNumber) {
     currentSong = allMusic[indexNumber - 1];
@@ -82,7 +97,6 @@ function loadMusic(indexNumber) {
     musicName.innerText = `${currentSong.name}||`;
     musicArtist.innerText = `${currentSong.artist}`;
 }
-
 
 
 
